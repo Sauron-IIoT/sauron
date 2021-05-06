@@ -1,0 +1,10 @@
+
+# Ignore dynaconf secret files
+.secrets.*
+
+
+__pycache__/
+*.py[cod]
+
+.DS_Store
+.idea/
