@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  database:
+    image: postgres:13.3-alpine
+    environment:
+      POSTGRES_PASSWORD: "sauron"
+    volumes:
+    - ./src/main/resources/db/migration/v0001_init.sql:/docker-entrypoint-initdb.d/v0001_init.sql
+    - ./src/main/resources/db/migration/v0002_sample_data.sql:/docker-entrypoint-initdb.d/v0002_sample_data.sql
+    networks:
+    - postgres-network
+  
+networks:
+postgres-network:
+    driver: bridge

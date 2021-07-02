@@ -7,6 +7,7 @@ name = "pypi"
 requests = "*"
 dynaconf = "*"
 paho-mqtt = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
