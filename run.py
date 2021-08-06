@@ -1,18 +1,11 @@
-from app.repository.camera import capture
-from app.repository.context_broker import get_product, create_product
+from app.repository.capture import fetch_one, save_local, save_remote, get_by_id
 
-capture_id = capture()
+capture = fetch_one()
+save_local(capture)
 
-print(f'captured picture: ./captures/{capture_id}.jpg')
+print(f'captured picture: {capture["path"]}')
+print(f'picture in db: {get_by_id(capture["id"])}')
 
-product_id = create_product({
-    'type': "product",
-    'name': {
-        'type': 'string',
-        'value': 'screw'
-    }
-})
+save_remote(capture)
 
-product = get_product(product_id)
-
-print(f'product created: {product}')
+print(f'capture {capture["id"]} uploaded to s3')
