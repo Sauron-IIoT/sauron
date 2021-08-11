@@ -1,16 +1,16 @@
 config:
-aws configure
+	aws configure
 
 install:
-pipenv install
+	pipenv install
 
 run:
-docker-compose up --remove-orphans
+	docker-compose up --remove-orphans
 
 stop:
-docker-compose down
+	docker-compose down
 
 clean:
-docker-compose down -v
-rm -rf captures/
-touch captures/.gitkeep
+	docker-compose down -v
+	rm -rf captures/
+	touch captures/.gitkeep
