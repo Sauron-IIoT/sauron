@@ -1,8 +1,8 @@
-import boto3
+import os, boto3
 from dynaconf import settings
 
 
-client = boto3.client('s3', region_name='sa-east-1')
+client = boto3.client('s3')
 
 
 def upload(file_path, bucket, object_name):
