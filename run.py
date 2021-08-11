@@ -1,11 +1,17 @@
-from app.repository.capture import fetch_one, save_local, save_remote, get_by_id
+import os, time, sys
+import app.worker.capture_and_save_local as capture_and_save_worker
+import app.worker.upload_to_s3_and_delete_local as upload_to_s3_worker
+from app.config.logging import config as config_logger
 
-capture = fetch_one()
-save_local(capture)
+config_logger()
+worker_name = os.getenv('SAURON_WORKER_NAME')
 
-print(f'captured picture: {capture["path"]}')
-print(f'picture in db: {get_by_id(capture["id"])}')
+while(True):
+    if worker_name == 'capture_and_save':
+        capture_and_save_worker.run()
+    elif worker_name == 'upload_to_s3':
+        upload_to_s3_worker.run()
+    else:
+        raise ValueError(f'unknown worker: {worker_name}')
 
-save_remote(capture)
-
-print(f'capture {capture["id"]} uploaded to s3')
+    time.sleep(10)

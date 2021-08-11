@@ -3,7 +3,8 @@ application_name = 'sauron'
 
 [dev]
 broker_address = "http://192.168.0.111:1026"
-camera_address = "https://en.wikipedia.org/wiki/Image#/media/File:Image_created_with_a_mobile_phone.png"
+camera_address = "http://192.168.0.243/capture"
+classification_address = "http://classification-api:8083"
 s3_bucket = "ftt-iiot-sauron"
 
 [prod]

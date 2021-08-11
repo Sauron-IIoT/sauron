@@ -4,10 +4,53 @@ services:
   database:
     image: postgres:13.3-alpine
     environment:
-      POSTGRES_DB: "temp"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "sauron"
+      POSTGRES_DB: temp
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: sauron
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d temp"]
+      interval: 2s
+      timeout: 5s
+      retries: 5
     ports:
       - "5432:5432"
     volumes:
       - ./migrations/v0001_init.sql:/docker-entrypoint-initdb.d/v0001_init.sql
+  classification-api:
+      image: murilokakazu/sauroniiot-classification-api
+      ports:
+        - "8083:8083"
+      volumes:
+        - ./captures:/app/captures
+  sauron_capture_and_save_worker:
+    build: .
+    environment:
+      SAURON_WORKER_NAME: "capture_and_save"
+      ENV_FOR_DYNACONF: "dev"
+    depends_on: 
+      - database
+      - classification-api
+    command: [
+      ".bin/wait-for-it.sh", "database:5432", "--", 
+      ".bin/wait-for-it.sh", "classification-api:8083", "--", 
+      "python", "run.py"]
+    volumes:
+      - ./captures:/captures
+      - ~/.aws/:/root/.aws:ro
+    tty: true
+  sauron_upload_to_s3_worker:
+    build: .
+    environment:
+      SAURON_WORKER_NAME: "upload_to_s3"
+      ENV_FOR_DYNACONF: "dev"
+    depends_on: 
+      - database
+      - classification-api
+    command: [
+      ".bin/wait-for-it.sh", "database:5432", "--", 
+      ".bin/wait-for-it.sh", "classification-api:8083", "--", 
+      "python", "run.py"]
+    volumes:
+      - ./captures:/captures
+      - ~/.aws/:/root/.aws:ro
+    tty: true
