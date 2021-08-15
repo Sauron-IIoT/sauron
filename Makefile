@@ -12,5 +12,5 @@ stop:
 
 clean:
 	docker-compose down -v
-	rm -rf captures/
+	rm -rf captures/*.jpg
 	touch captures/.gitkeep
