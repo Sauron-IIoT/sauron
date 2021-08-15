@@ -10,7 +10,7 @@ s3_bucket = settings['s3_bucket']
 
 
 def fetch_one_from_iot_device():
-    new_id = uuid.uuid4()
+    new_id = str(uuid.uuid4())
     return {
         'id': new_id,
         'content_bytes': capture(),
