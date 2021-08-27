@@ -16,7 +16,7 @@ def create_capture(capture):
     helix_capture['id'] = f'urn:ngsi-ld:capture:{capture["id"]}'
     helix_capture['type'] = 'capture'
 
-    response = requests.post(f'{settings["broker_address"]}/v2/entities',
+    response = requests.post(f'{settings["broker_address"]}/v2/entities?options=keyValues',
                              data=json.dumps(helix_capture), headers=headers_post)
     print(response.text)
     response.raise_for_status()
