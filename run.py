@@ -1,17 +1,26 @@
-import os, time, sys
-import app.worker.capture_and_save_local as capture_and_save_worker
-import app.worker.upload_to_s3_and_delete_local as upload_to_s3_worker
+import os, time, logging
+import app.worker.capture as capture
+import app.worker.upload as upload
+import app.worker.cleanup as cleanup
 from app.config.logging import config as config_logger
 
 config_logger()
 worker_name = os.getenv('SAURON_WORKER_NAME')
+worker_sleep = int(os.getenv('SAURON_WORKER_SLEEP'))
 
 while(True):
-    if worker_name == 'capture_and_save':
-        capture_and_save_worker.run()
-    elif worker_name == 'upload_to_s3':
-        upload_to_s3_worker.run()
-    else:
-        raise ValueError(f'unknown worker: {worker_name}')
+    try:
+        if worker_name == 'capture':
+            capture.run()
+        elif worker_name == 'upload':
+            upload.run()
+        elif worker_name == 'cleanup':
+            cleanup.run()
+        else:
+            raise ValueError(f'unknown worker: {worker_name}')
+    except Exception as ex:
+        logging.error(f'Unexpected error running {worker_name}: {ex}')
 
-    time.sleep(10)
+    logging.info(f'sleeping for {worker_sleep} seconds...')
+
+    time.sleep(worker_sleep)

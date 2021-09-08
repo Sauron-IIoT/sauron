@@ -22,10 +22,11 @@ services:
         - "8083:8083"
       volumes:
         - ./captures:/app/captures
-  sauron_capture_and_save_worker:
+  sauron_worker_capture:
     build: .
     environment:
-      SAURON_WORKER_NAME: "capture_and_save"
+      SAURON_WORKER_NAME: "capture"
+      SAURON_WORKER_SLEEP: 5
       ENV_FOR_DYNACONF: "dev"
     depends_on: 
       - database
@@ -38,10 +39,28 @@ services:
       - ./captures:/captures
       - ~/.aws/:/root/.aws:ro
     tty: true
-  sauron_upload_to_s3_worker:
+  sauron_worker_upload:
     build: .
     environment:
-      SAURON_WORKER_NAME: "upload_to_s3"
+      SAURON_WORKER_NAME: "upload"
+      SAURON_WORKER_SLEEP: 15
+      ENV_FOR_DYNACONF: "dev"
+    depends_on: 
+      - database
+      - classification-api
+    command: [
+      ".bin/wait-for-it.sh", "database:5432", "--", 
+      ".bin/wait-for-it.sh", "classification-api:8083", "--", 
+      "python", "run.py"]
+    volumes:
+      - ./captures:/captures
+      - ~/.aws/:/root/.aws:ro
+    tty: true
+  sauron_worker_cleanup:
+    build: .
+    environment:
+      SAURON_WORKER_NAME: "cleanup"
+      SAURON_WORKER_SLEEP: 30
       ENV_FOR_DYNACONF: "dev"
     depends_on: 
       - database
