@@ -5,7 +5,7 @@ install:
 	pipenv install
 
 run:
-	docker-compose up --remove-orphans
+	docker-compose up --remove-orphans --build
 
 stop:
 	docker-compose down

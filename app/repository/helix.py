@@ -1,4 +1,3 @@
-import uuid
 import requests
 import json
 from dynaconf import settings
@@ -12,11 +11,14 @@ headers_post = {
 
 
 def create_capture(capture):
-    helix_capture = capture.copy()
+    helix_capture = {
+        'uuid': capture['id'],
+        'captured_at': capture['captured_at'],
+        'classification_score': capture['classification_score']
+    }
     helix_capture['id'] = f'urn:ngsi-ld:capture:{capture["id"]}'
     helix_capture['type'] = 'capture'
 
     response = requests.post(f'{settings["broker_address"]}/v2/entities?options=keyValues',
                              data=json.dumps(helix_capture), headers=headers_post)
-    print(response.text)
     response.raise_for_status()
