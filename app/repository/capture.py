@@ -2,7 +2,7 @@ import os, uuid, datetime
 from dynaconf import settings
 from app.infrastructure.filesystem import persist_file, delete_file
 from app.infrastructure.database import insert_capture, update_capture, query_capture_by_id, \
-                                        query_uploaded_captures, query_unuploaded_captures, \
+                                        query_uploaded_captures, query_classified_captures, \
                                         delete_capture_by_id
 from app.infrastructure.s3 import upload
 from app.infrastructure.iot_camera import capture
@@ -22,8 +22,8 @@ def fetch_one_from_iot_device():
 def fetch_by_id(capture_id):
     return query_capture_by_id(capture_id)
 
-def fetch_all_unuploaded():
-    return query_unuploaded_captures()
+def fetch_all_classified():
+    return query_classified_captures()
 
 def persist_local(capture):
     capture['path'] = f'./captures/{capture["id"]}.jpg'
