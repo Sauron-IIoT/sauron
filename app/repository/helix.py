@@ -14,7 +14,8 @@ def create_capture(capture):
     helix_capture = {
         'uuid': capture['id'],
         'captured_at': capture['captured_at'],
-        'classification_score': capture['classification_score']
+        'prediction_label': capture['prediction_label'],
+        'prediction_confidence': capture['prediction_confidence']
     }
     helix_capture['id'] = f'urn:ngsi-ld:capture:{capture["id"]}'
     helix_capture['type'] = 'capture'
