@@ -22,7 +22,7 @@ services:
         - "8083:8083"
       environment:
         PROD: "True"
-        MODEL_PATH: /app/model/weights/model_apple_banana.h5
+        MODEL_PATH: /app/model/weights/model.h5
       volumes:
         - ./captures:/app/captures
   sauron_worker_capture:
