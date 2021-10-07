@@ -9,6 +9,7 @@ dynaconf = "*"
 paho-mqtt = "*"
 psycopg2-binary = "*"
 boto3 = "*"
+flask = "*"
 
 [dev-packages]
 
