@@ -25,25 +25,29 @@ services:
         MODEL_PATH: /app/model/weights/model.h5
       volumes:
         - ./captures:/app/captures
-  sauron_worker_capture:
-    build: .
+  sauron-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
     environment:
-      SAURON_WORKER_NAME: "capture"
-      SAURON_WORKER_SLEEP: 5
       ENV_FOR_DYNACONF: "dev"
+    ports:
+      - "5000:5000"
     depends_on: 
       - database
       - classification-api
     command: [
       ".bin/wait-for-it.sh", "database:5432", "--", 
       ".bin/wait-for-it.sh", "classification-api:8083", "--", 
-      "python", "run.py"]
+      "python", "api.py"]
     volumes:
       - ./captures:/captures
       - ~/.aws/:/root/.aws:ro
     tty: true
-  sauron_worker_upload:
-    build: .
+  worker-upload:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
     environment:
       SAURON_WORKER_NAME: "upload"
       SAURON_WORKER_SLEEP: 15
@@ -51,16 +55,19 @@ services:
     depends_on: 
       - database
       - classification-api
+      - sauron-api
     command: [
       ".bin/wait-for-it.sh", "database:5432", "--", 
       ".bin/wait-for-it.sh", "classification-api:8083", "--", 
-      "python", "run.py"]
+      "python", "worker.py"]
     volumes:
       - ./captures:/captures
       - ~/.aws/:/root/.aws:ro
     tty: true
-  sauron_worker_cleanup:
-    build: .
+  worker-cleanup:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
     environment:
       SAURON_WORKER_NAME: "cleanup"
       SAURON_WORKER_SLEEP: 30
@@ -68,10 +75,11 @@ services:
     depends_on: 
       - database
       - classification-api
+      - sauron-api
     command: [
       ".bin/wait-for-it.sh", "database:5432", "--", 
       ".bin/wait-for-it.sh", "classification-api:8083", "--", 
-      "python", "run.py"]
+      "python", "worker.py"]
     volumes:
       - ./captures:/captures
       - ~/.aws/:/root/.aws:ro
