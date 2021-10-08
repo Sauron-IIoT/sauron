@@ -18,4 +18,4 @@ def capture():
 
     logging.info(f'persisted capture to {capture["path"]}', extra=capture)
 
-    return {"ACK"}
+    return "ACK"
