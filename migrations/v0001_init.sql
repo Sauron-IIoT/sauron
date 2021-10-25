@@ -4,5 +4,6 @@ create table capture (
     captured_at timestamp with time zone,
     prediction_label character varying null,
     prediction_confidence numeric null,
+    prediction_processing_time numeric null,
     status character varying not null default 'new'
 );

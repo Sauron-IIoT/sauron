@@ -21,7 +21,8 @@ def create_capture(capture):
         'uuid': capture['id'],
         'captured_at': capture['captured_at'],
         'prediction_label': entity_type,
-        'prediction_confidence': capture['prediction_confidence']
+        'prediction_confidence': capture['prediction_confidence'],
+        'prediction_processing_time': capture['prediction_processing_time']
     }
     helix_capture['id'] = f'urn:ngsi-ld:capture:{capture["id"]}'
     helix_capture['type'] = entity_type

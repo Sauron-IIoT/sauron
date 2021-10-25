@@ -18,12 +18,12 @@ def query_classified_captures():
     return _query_many("select * from capture where status = 'classified'")
 
 def insert_capture(capture):
-    cursor.execute(f"insert into capture (id, path, captured_at, prediction_label, prediction_confidence, status) values (%s, %s, %s, %s, %s, %s)", 
-        (capture['id'], capture.get('path'), capture.get('captured_at'), capture.get('prediction_label'), capture.get('prediction_confidence'), capture.get('status')))
+    cursor.execute(f"insert into capture (id, path, captured_at, prediction_label, prediction_confidence, prediction_processing_time, status) values (%s, %s, %s, %s, %s,%s, %s)", 
+        (capture['id'], capture.get('path'), capture.get('captured_at'), capture.get('prediction_label'), capture.get('prediction_confidence'), capture.get('prediction_processing_time'), capture.get('status')))
 
 def update_capture(capture):
-    cursor.execute(f"update capture set path = %s, captured_at = %s, prediction_label = %s, prediction_confidence = %s, status = %s where id = %s", 
-        (capture.get('path'), capture.get('captured_at'), capture.get('prediction_label'), capture.get('prediction_confidence'), capture.get('status'), capture['id']))
+    cursor.execute(f"update capture set path = %s, captured_at = %s, prediction_label = %s, prediction_confidence = %s, prediction_processing_time = %s, status = %s where id = %s", 
+        (capture.get('path'), capture.get('captured_at'), capture.get('prediction_label'), capture.get('prediction_confidence'), capture.get('prediction_processing_time'), capture.get('status'), capture['id']))
 
 def delete_capture_by_id(capture_id):
     cursor.execute(f"delete from capture where id = %s", (capture_id,))
